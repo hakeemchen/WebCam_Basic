@@ -399,16 +399,8 @@ void CTestCodeDlg::OnBnClickedButtonSave()
 
 	m_editID.GetWindowText(strName);
 
-	CString path_create;
-	//http://blog.naver.com/wlvkddlwkd/221074951062
-	path_create.Format(_T("C:\\capture\\%s"), strName);
-
-	CreateDirectory(path_create, NULL);
-
-	SYSTEMTIME time;
-	GetLocalTime(&time);
 	CString Name;
-	Name.Format(_T("C:\\capture\\%s\\CAM1_%4d%2d%2d_%2d%2d%2d.bmp"), strName, time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond);
+	Name.Format(_T("C:\\capture\\%s.bmp"), strName);
 
 	_bstr_t gg(Name);
 	BSTR lpszFileName = gg.copy();
