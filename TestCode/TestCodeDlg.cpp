@@ -113,7 +113,7 @@ BOOL CTestCodeDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
-	capture = new VideoCapture(0);
+	capture = new VideoCapture(1);
 	if (!capture->isOpened())
 	{
 		MessageBox(_T("캠을 열수 없습니다. \n"));
