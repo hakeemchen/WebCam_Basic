@@ -5,8 +5,11 @@
 #pragma once
 #include "afxwin.h"
 
+#include <fstream>
+#include <Windows.h>
 #include <opencv2\opencv.hpp>
 
+using namespace std;
 using namespace cv;
 
 // CTestCodeDlg 대화 상자

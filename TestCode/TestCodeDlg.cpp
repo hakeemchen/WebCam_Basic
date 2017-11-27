@@ -113,7 +113,21 @@ BOOL CTestCodeDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
-	capture = new VideoCapture(1);
+
+	string file_path = ".\\config.txt";
+
+	ifstream rf(file_path.data());
+	if (!rf.is_open())
+	{
+		MessageBox(NULL, L"경로에 config.txt 파일이 존재하지 않습니다.");
+		return 1;
+	}
+
+	string line;
+	getline(rf, line);
+	int DEV_NUM = stoi(line);
+
+	capture = new VideoCapture(DEV_NUM);
 	if (!capture->isOpened())
 	{
 		MessageBox(_T("캠을 열수 없습니다. \n"));
