@@ -7,6 +7,7 @@
 
 #include <fstream>
 #include <Windows.h>
+#include "opencv_header.h"
 #include <opencv2\opencv.hpp>
 
 using namespace std;

@@ -11,11 +11,11 @@
 #define new DEBUG_NEW
 #endif
 
-#ifdef _DEBUG
-#pragma comment (lib, "opencv_world331d.lib")
-#else 
-#pragma comment (lib, "opencv_world331.lib")
-#endif
+//#ifdef _DEBUG
+//#pragma comment (lib, "opencv_world331d.lib")
+//#else 
+//#pragma comment (lib, "opencv_world331.lib")
+//#endif
 
 
 // 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
@@ -369,61 +369,79 @@ void CTestCodeDlg::OnBnClickedButtonCapture()
 
 void CTestCodeDlg::OnBnClickedButtonSave()
 {
-	CDC* pDC = m_picture_2.GetDC();
-	HDC hDC = pDC->m_hDC;
+	Mat resizeImage;
 
-	RECT rc;
-	m_picture.GetClientRect(&rc);
+	resize(copy_mat_frame, resizeImage, Size(640, 480), 0, 0, CV_INTER_LINEAR);
 
-	HDC hMemDC = CreateCompatibleDC(hDC);
-	HBITMAP hBitmap = CreateCompatibleBitmap(hDC, rc.right, rc.bottom);
-	HBITMAP hBmpOld = (HBITMAP)SelectObject(hMemDC, hBitmap);
-	BitBlt(hMemDC, 0, 0, rc.right, rc.bottom, hDC, 0, 0, SRCCOPY);
-	SelectObject(hMemDC, hBmpOld);
-	DeleteDC(hMemDC);
-
-	BITMAPINFOHEADER bmih;
-	ZeroMemory(&bmih, sizeof(BITMAPINFOHEADER));
-	bmih.biSize = sizeof(BITMAPINFOHEADER);
-	bmih.biWidth = rc.right;
-	bmih.biHeight = rc.bottom;
-	bmih.biPlanes = 1;
-	bmih.biBitCount = 24;
-	bmih.biCompression = BI_RGB;
-
-	GetDIBits(hDC, hBitmap, 0, rc.bottom, NULL, (LPBITMAPINFO)&bmih, DIB_RGB_COLORS);
-	LPBYTE lpBits = new BYTE[bmih.biSizeImage];
-	GetDIBits(hDC, hBitmap, 0, rc.bottom, lpBits, (LPBITMAPINFO)&bmih, DIB_RGB_COLORS);
-	ReleaseDC(pDC);
-	DeleteObject(hBitmap);
-
-	BITMAPFILEHEADER bmfh;
-	bmfh.bfType = 'MB';
-	bmfh.bfSize = sizeof(BITMAPFILEHEADER)
-		+ sizeof(BITMAPINFOHEADER) + bmih.biSizeImage;
-	bmfh.bfReserved1 = 0;
-	bmfh.bfReserved2 = 0;
-	bmfh.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
-
-	//파일 저장 부 
-
-	CreateDirectory(_T("C:\\capture"), NULL);
+	CreateDirectory(_T(".\\capture"), NULL);
 
 	CString strName;
 
 	m_editID.GetWindowText(strName);
 
 	CString Name;
-	Name.Format(_T("C:\\capture\\%s.bmp"), strName);
+	Name.Format(_T(".\\capture\\%s.bmp"), strName);
 
-	_bstr_t gg(Name);
-	BSTR lpszFileName = gg.copy();
+	CT2CA pszConvertedAnsitring(Name);
+	string sName(pszConvertedAnsitring);
 
-	DWORD dwwritten;
-	HANDLE hFile = CreateFile(lpszFileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-	WriteFile(hFile, &bmfh, sizeof(BITMAPFILEHEADER), &dwwritten, NULL);
-	WriteFile(hFile, &bmih, sizeof(BITMAPINFOHEADER), &dwwritten, NULL);
-	WriteFile(hFile, lpBits, bmih.biSizeImage, &dwwritten, NULL);
-	CloseHandle(hFile);
-	delete[] lpBits;
+	imwrite(sName, resizeImage);
+
+	//CDC* pDC = m_picture_2.GetDC();
+	//HDC hDC = pDC->m_hDC;
+
+	//RECT rc;
+	//m_picture.GetClientRect(&rc);
+
+	//HDC hMemDC = CreateCompatibleDC(hDC);
+	//HBITMAP hBitmap = CreateCompatibleBitmap(hDC, rc.right, rc.bottom);
+	//HBITMAP hBmpOld = (HBITMAP)SelectObject(hMemDC, hBitmap);
+	//BitBlt(hMemDC, 0, 0, rc.right, rc.bottom, hDC, 0, 0, SRCCOPY);
+	//SelectObject(hMemDC, hBmpOld);
+	//DeleteDC(hMemDC);
+
+	//BITMAPINFOHEADER bmih;
+	//ZeroMemory(&bmih, sizeof(BITMAPINFOHEADER));
+	//bmih.biSize = sizeof(BITMAPINFOHEADER);
+	//bmih.biWidth = rc.right;
+	//bmih.biHeight = rc.bottom;
+	//bmih.biPlanes = 1;
+	//bmih.biBitCount = 24;
+	//bmih.biCompression = BI_RGB;
+
+	//GetDIBits(hDC, hBitmap, 0, rc.bottom, NULL, (LPBITMAPINFO)&bmih, DIB_RGB_COLORS);
+	//LPBYTE lpBits = new BYTE[bmih.biSizeImage];
+	//GetDIBits(hDC, hBitmap, 0, rc.bottom, lpBits, (LPBITMAPINFO)&bmih, DIB_RGB_COLORS);
+	//ReleaseDC(pDC);
+	//DeleteObject(hBitmap);
+
+	//BITMAPFILEHEADER bmfh;
+	//bmfh.bfType = 'MB';
+	//bmfh.bfSize = sizeof(BITMAPFILEHEADER)
+	//	+ sizeof(BITMAPINFOHEADER) + bmih.biSizeImage;
+	//bmfh.bfReserved1 = 0;
+	//bmfh.bfReserved2 = 0;
+	//bmfh.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+
+	////파일 저장 부 
+
+	//CreateDirectory(_T("C:\\capture"), NULL);
+
+	//CString strName;
+
+	//m_editID.GetWindowText(strName);
+
+	//CString Name;
+	//Name.Format(_T("C:\\capture\\%s.bmp"), strName);
+
+	//_bstr_t gg(Name);
+	//BSTR lpszFileName = gg.copy();
+
+	//DWORD dwwritten;
+	//HANDLE hFile = CreateFile(lpszFileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	//WriteFile(hFile, &bmfh, sizeof(BITMAPFILEHEADER), &dwwritten, NULL);
+	//WriteFile(hFile, &bmih, sizeof(BITMAPINFOHEADER), &dwwritten, NULL);
+	//WriteFile(hFile, lpBits, bmih.biSizeImage, &dwwritten, NULL);
+	//CloseHandle(hFile);
+	//delete[] lpBits;
 }
